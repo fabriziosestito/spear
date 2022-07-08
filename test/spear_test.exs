@@ -692,6 +692,8 @@ defmodule SpearTest do
       assert {:ok, subs} = Spear.list_persistent_subscriptions(c.conn)
       assert has_this_psub?.(subs)
 
+      assert {:ok, sub_info} = Spear.persistent_subscription_info(c.conn, stream, group)
+
       assert Spear.update_persistent_subscription(c.conn, stream, group, settings) == :ok
       assert {:ok, subs} = Spear.list_persistent_subscriptions(c.conn)
       assert has_this_psub?.(subs)

@@ -1813,6 +1813,22 @@ defmodule Spear do
     end
   end
 
+  def persistent_subscription_info(conn, stream, group) do
+    message =
+      Persistent.get_info_req(
+        options:
+          Persistent.get_info_req_options(
+            stream_option: {:stream_identifier, Shared.stream_identifier(stream_name: stream)},
+            group_name: group
+          )
+      )
+
+    with {:ok, get_info_resp} <- request(conn, Persistent, :GetInfo, [message], []) do
+      get_info_resp |> IO.inspect()
+      {:ok, Spear.PersistentSubscription.Info.from_get_info_response(get_info_resp)} |> IO.inspect()
+    end
+  end
+
   @doc """
   Deletes a persistent subscription from the EventStoreDB
 
